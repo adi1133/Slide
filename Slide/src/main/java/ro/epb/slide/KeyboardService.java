@@ -126,14 +126,19 @@ public class KeyboardService extends InputMethodService {
                     Log.i("null2","is null2");
                     return ;
                 }
-                if(primaryCode == '\b')
+                switch (primaryCode)
                 {
-                    sendDownUpKeyEvents(KeyEvent.KEYCODE_DEL);
+                    case '\b':
+                        sendDownUpKeyEvents(KeyEvent.KEYCODE_DEL);
+                        break;
+                    case '\n':
+                        sendDownUpKeyEvents(KeyEvent.KEYCODE_ENTER);
+                        break;
+                    default:
+                        mInputConnection.commitText(String.valueOf((char) primaryCode), 1);
+                        break;
                 }
-                else
-                {
-                    mInputConnection.commitText(String.valueOf((char) primaryCode), 1);
-                }
+
                 //getCurrentInputConnection().sendKeyEvent(new KeyEvent(primaryCode));
             }
 
