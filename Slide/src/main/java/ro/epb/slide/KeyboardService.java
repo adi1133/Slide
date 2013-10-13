@@ -41,7 +41,8 @@ public class KeyboardService extends InputMethodService {
 
     @Override
     public View onCreateInputView() {
-        KeyboardView ret = (KeyboardView)  getLayoutInflater().inflate(R.layout.keybord, null);
+        final KeyboardView ret = (KeyboardView)  getLayoutInflater().inflate(R.layout.keybord, null);
+        ret.setPreviewEnabled(false);
         ret.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -59,9 +60,12 @@ public class KeyboardService extends InputMethodService {
                             if(mInputConnection == null)
                             {
                                 Log.i("null","is null");
-                                return false;
+                                break;
                             }
-                            eatOneKey = true;
+                            if(!eatOneKey)
+                            {
+                                eatOneKey = true;
+                            }
                             Log.i("not null","asdasd");
 
                              ExtractedText et = mInputConnection.getExtractedText(new ExtractedTextRequest(), 0);
@@ -84,8 +88,6 @@ public class KeyboardService extends InputMethodService {
 //                            mInputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, code));
                             posX = event.getX();
                         }
-
-
                         break;
                     case MotionEvent.ACTION_UP:
                         break;
@@ -126,10 +128,7 @@ public class KeyboardService extends InputMethodService {
                 }
                 if(primaryCode == '\b')
                 {
-                    mInputConnection.sendKeyEvent(
-                            new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                    mInputConnection. sendKeyEvent(
-                            new KeyEvent(KeyEvent.ACTION_UP,  KeyEvent.KEYCODE_DEL));
+                    sendDownUpKeyEvents(KeyEvent.KEYCODE_DEL);
                 }
                 else
                 {
